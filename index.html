@@ -1,0 +1,486 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>여러개 마커에 이벤트 등록하기1</title>
+    
+</head>
+<body>
+<div id="map" style="width:100%;height:350px;"></div>
+
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=26c0a866290f5f511c5e1c4d0c9d5d8d"></script>
+<script>
+var mapContainer = document.getElementById('map'), // 지도를 표시할 div  
+    mapOption = { 
+        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };
+
+var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+ 
+// 마커를 표시할 위치와 내용을 가지고 있는 객체 배열입니다 
+var positions = [
+    {
+content: '<div>청주고인쇄박물관</div>',
+latlng: new kakao.maps.LatLng(36.6439745,127.4714597)
+},
+{
+content: '<div>고성탈박물관</div>',
+latlng: new kakao.maps.LatLng(34.971094,128.333804)
+},
+{
+content: '<div>고성박물관</div>',
+latlng: new kakao.maps.LatLng(34.97937123,128.3210129)
+},
+{
+content: '<div>고성공룡박물관</div>',
+latlng: new kakao.maps.LatLng(34.90809866,128.148669)
+},
+{
+content: '<div>청주시립미술관</div>',
+latlng: new kakao.maps.LatLng(36.63471608,127.4782998)
+},
+{
+content: '<div>경주테디베어박물관</div>',
+latlng: new kakao.maps.LatLng(35.8518937,129.2734577)
+},
+{
+content: '<div>한국대중음악박물관</div>',
+latlng: new kakao.maps.LatLng(35.84034131,129.2888924)
+},
+{
+content: '<div>불국사박물관</div>',
+latlng: new kakao.maps.LatLng(35.7923038,129.3317233)
+},
+{
+content: '<div>동국대학교경주캠퍼스박물관</div>',
+latlng: new kakao.maps.LatLng(35.86479343,129.1910293)
+},
+{
+content: '<div>경주대박물관</div>',
+latlng: new kakao.maps.LatLng(35.829283,129.1632401)
+},
+{
+content: '<div>자하미술관</div>',
+latlng: new kakao.maps.LatLng(37.5893192,126.9603062)
+},
+{
+content: '<div>환기미술관</div>',
+latlng: new kakao.maps.LatLng(37.59408777,126.9661137)
+},
+{
+content: '<div>세계다문화박물관</div>',
+latlng: new kakao.maps.LatLng(37.6187179,126.9325323)
+},
+{
+content: '<div>백석대학교 기독교박물관</div>',
+latlng: new kakao.maps.LatLng(36.84134842,127.1873755)
+},
+{
+content: '<div>천안시립미술관</div>',
+latlng: new kakao.maps.LatLng(36.75604728,127.2258439)
+},
+{
+content: '<div>리각미술관</div>',
+latlng: new kakao.maps.LatLng(36.8201561,127.1862882)
+},
+{
+content: '<div>상주자전거박물관</div>',
+latlng: new kakao.maps.LatLng(36.45322678,128.2550593)
+},
+{
+content: '<div>함창 명주박물관</div>',
+latlng: new kakao.maps.LatLng(36.5764616,128.1599209)
+},
+{
+content: '<div>상주박물관</div>',
+latlng: new kakao.maps.LatLng(36.460531,128.240759)
+},
+{
+content: '<div>한양대학교박물관</div>',
+latlng: new kakao.maps.LatLng(37.55827664,127.0482318)
+},
+{
+content: '<div>완판본문화관</div>',
+latlng: new kakao.maps.LatLng(35.81196229,127.1579796)
+},
+{
+content: '<div>합덕수리민속박물관</div>',
+latlng: new kakao.maps.LatLng(36.79326769,126.7842785)
+},
+{
+content: '<div>홍주성역사관</div>',
+latlng: new kakao.maps.LatLng(36.60019715,126.6609224)
+},
+{
+content: '<div>공세리성지성당박물관</div>',
+latlng: new kakao.maps.LatLng(36.88194612,126.9139785)
+},
+{
+content: '<div>경주솔거미술관</div>',
+latlng: new kakao.maps.LatLng(35.83225413,129.288868)
+},
+{
+content: '<div>경주예술의전당알천미술관</div>',
+latlng: new kakao.maps.LatLng(35.86235686,129.205958)
+},
+{
+content: '<div>우양미술관</div>',
+latlng: new kakao.maps.LatLng(35.8399144,129.2859499)
+},
+{
+content: '<div>충주고구려천문과학관</div>',
+latlng: new kakao.maps.LatLng(37.040354,127.848417)
+},
+{
+content: '<div>세계무술박물관</div>',
+latlng: new kakao.maps.LatLng(36.98843956,127.9077644)
+},
+{
+content: '<div>충렬사유물전시관</div>',
+latlng: new kakao.maps.LatLng(36.94617991,127.9054216)
+},
+{
+content: '<div>충주박물관</div>',
+latlng: new kakao.maps.LatLng(37.016683,127.8651272)
+},
+{
+content: '<div>복권박물관</div>',
+latlng: new kakao.maps.LatLng(36.84872484,127.2017093)
+},
+{
+content: '<div>도계민화박물관</div>',
+latlng: new kakao.maps.LatLng(36.79279435,127.1722265)
+},
+{
+content: '<div>한국토종씨앗박물관</div>',
+latlng: new kakao.maps.LatLng(36.6663175,126.8784015)
+},
+{
+content: '<div>한서대학교 박물관</div>',
+latlng: new kakao.maps.LatLng(36.69071805,126.5869659)
+},
+{
+content: '<div>전주한옥마을역사관</div>',
+latlng: new kakao.maps.LatLng(35.81589052,127.1530349)
+},
+{
+content: '<div>전주자연생태관</div>',
+latlng: new kakao.maps.LatLng(35.81159258,127.1625872)
+},
+{
+content: '<div>뜻밖의미술관</div>',
+latlng: new kakao.maps.LatLng(35.82627298,127.1470119)
+},
+{
+content: '<div>국립전주박물관</div>',
+latlng: new kakao.maps.LatLng(35.80103866,127.0883735)
+},
+{
+content: '<div>전북대학교박물관</div>',
+latlng: new kakao.maps.LatLng(35.8411407,127.13159)
+},
+{
+content: '<div>전북대학교자연사박물관</div>',
+latlng: new kakao.maps.LatLng(35.8411407,127.13159)
+},
+{
+content: '<div>전주대학교박물관</div>',
+latlng: new kakao.maps.LatLng(35.81616417,127.0888841)
+},
+{
+content: '<div>부채박물관</div>',
+latlng: new kakao.maps.LatLng(35.80982205,127.1531135)
+},
+{
+content: '<div>전주한지박물관</div>',
+latlng: new kakao.maps.LatLng(35.84512928,127.0967046)
+},
+{
+content: '<div>성균관대학교 박물관</div>',
+latlng: new kakao.maps.LatLng(37.58722985,126.9931161)
+},
+{
+content: '<div>국립현대미술관(서울관)</div>',
+latlng: new kakao.maps.LatLng(37.57862929,126.9800889)
+},
+{
+content: '<div>OCI 미술관</div>',
+latlng: new kakao.maps.LatLng(37.57323807,126.982131)
+},
+{
+content: '<div>JCC미술관</div>',
+latlng: new kakao.maps.LatLng(37.58716156,127.0018885)
+},
+{
+content: '<div>금호미술관</div>',
+latlng: new kakao.maps.LatLng(37.57746518,126.9799126)
+},
+{
+content: '<div>사비나미술관</div>',
+latlng: new kakao.maps.LatLng(37.57651443,126.9845724)
+},
+{
+content: '<div>상원미술관</div>',
+latlng: new kakao.maps.LatLng(37.61162656,126.976541)
+},
+{
+content: '<div>성곡미술관</div>',
+latlng: new kakao.maps.LatLng(37.57350943,126.969703)
+},
+{
+content: '<div>장생포고래박물관</div>',
+latlng: new kakao.maps.LatLng(35.50273654,129.380749)
+},
+{
+content: '<div>외솔기념관</div>',
+latlng: new kakao.maps.LatLng(35.57475705,129.3474699)
+},
+{
+content: '<div>울주민속박물관</div>',
+latlng: new kakao.maps.LatLng(35.43641517,129.2809517)
+},
+{
+content: '<div>울산옹기박물관</div>',
+latlng: new kakao.maps.LatLng(35.435094,129.2795088)
+},
+{
+content: '<div>충렬공박제상기념관</div>',
+latlng: new kakao.maps.LatLng(35.65465702,129.2294844)
+},
+{
+content: '<div>국립중앙박물관</div>',
+latlng: new kakao.maps.LatLng(37.52470233,126.9777412)
+},
+{
+content: '<div>국립한글박물관</div>',
+latlng: new kakao.maps.LatLng(37.52106997,126.9804843)
+},
+{
+content: '<div>백범김구기념관</div>',
+latlng: new kakao.maps.LatLng(37.54427794,126.9592546)
+},
+{
+content: '<div>전쟁기념관</div>',
+latlng: new kakao.maps.LatLng(37.53731288,126.9784661)
+},
+{
+content: '<div>한익환서울아트박물관</div>',
+latlng: new kakao.maps.LatLng(37.53802833,127.004992)
+},
+{
+content: '<div>숙명여자대학교 정영양자수박물관</div>',
+latlng: new kakao.maps.LatLng(37.54547273,126.9650748)
+},
+{
+content: '<div>숙명여자대학교박물관</div>',
+latlng: new kakao.maps.LatLng(37.54547273,126.9650748)
+},
+{
+content: '<div>삼성미술관 Leeum</div>',
+latlng: new kakao.maps.LatLng(37.53846091,126.999294)
+},
+{
+content: '<div>숙명여자대학교 문신미술관</div>',
+latlng: new kakao.maps.LatLng(37.54547273,126.9650748)
+},
+{
+content: '<div>김세중미술관</div>',
+latlng: new kakao.maps.LatLng(37.54201614,126.9638815)
+},
+{
+content: '<div>아모레퍼시픽미술관</div>',
+latlng: new kakao.maps.LatLng(37.52879082,126.9686757)
+},
+{
+content: '<div>여주산림박물관</div>',
+latlng: new kakao.maps.LatLng(37.27875343,127.6470365)
+},
+{
+content: '<div>여주시립폰박물관</div>',
+latlng: new kakao.maps.LatLng(37.29306214,127.666904)
+},
+{
+content: '<div>명성황후기념관</div>',
+latlng: new kakao.maps.LatLng(37.25967518,127.6554281)
+},
+{
+content: '<div>여주박물관</div>',
+latlng: new kakao.maps.LatLng(37.2996535,127.6533782)
+},
+{
+content: '<div>아트뮤지엄 려</div>',
+latlng: new kakao.maps.LatLng(37.2380063,127.6078488)
+},
+{
+content: '<div>목아박물관</div>',
+latlng: new kakao.maps.LatLng(37.28855063,127.6881237)
+},
+{
+content: '<div>여성생활사박물관</div>',
+latlng: new kakao.maps.LatLng(37.2425236,127.7081445)
+},
+{
+content: '<div>죽포미술관</div>',
+latlng: new kakao.maps.LatLng(37.41003128,127.4426394)
+},
+{
+content: '<div>여주곤충박물관</div>',
+latlng: new kakao.maps.LatLng(37.24330175,127.6160285)
+},
+{
+content: '<div>청학(옹청)박물관</div>',
+latlng: new kakao.maps.LatLng(37.38943856,127.4481509)
+},
+{
+content: '<div>외솔기념관</div>',
+latlng: new kakao.maps.LatLng(35.57475705,129.3474699)
+},
+{
+content: '<div>함평군립미술관</div>',
+latlng: new kakao.maps.LatLng(35.05813923,126.5226056)
+},
+{
+content: '<div>동주대학교 석파박물관</div>',
+latlng: new kakao.maps.LatLng(35.10672357,128.9972309)
+},
+{
+content: '<div>기지시줄다리기박물관</div>',
+latlng: new kakao.maps.LatLng(36.89616228,126.694763)
+},
+{
+content: '<div>합덕수리민속박물관</div>',
+latlng: new kakao.maps.LatLng(36.7932667,126.7842769)
+},
+{
+content: '<div>한국도량형박물관</div>',
+latlng: new kakao.maps.LatLng(36.8927981,126.6765945)
+},
+{
+content: '<div>아미미술관</div>',
+latlng: new kakao.maps.LatLng(36.86174554,126.6804815)
+},
+{
+content: '<div>순성미술관</div>',
+latlng: new kakao.maps.LatLng(36.84330389,126.7126072)
+},
+{
+content: '<div>수다라성보박물관</div>',
+latlng: new kakao.maps.LatLng(35.19967453,126.5500459)
+},
+{
+content: '<div>우리삶문화옥당박물관</div>',
+latlng: new kakao.maps.LatLng(35.36068807,126.4026604)
+},
+{
+content: '<div>김해한림박물관</div>',
+latlng: new kakao.maps.LatLng(35.2949807,128.7932939)
+},
+{
+content: '<div>진영역철도박물관</div>',
+latlng: new kakao.maps.LatLng(35.3035579,128.7302348)
+},
+{
+content: '<div>인천광역시립박물관</div>',
+latlng: new kakao.maps.LatLng(37.42070925,126.6531798)
+},
+{
+content: '<div>가천박물관</div>',
+latlng: new kakao.maps.LatLng(37.41847997,126.6576026)
+},
+{
+content: '<div>장보고기념관</div>',
+latlng: new kakao.maps.LatLng(34.355097,126.730164)
+},
+{
+content: '<div>화정박물관</div>',
+latlng: new kakao.maps.LatLng(37.6045606,126.9660819)
+},
+{
+content: '<div>겸재정선미술관</div>',
+latlng: new kakao.maps.LatLng(37.57222297,126.838412)
+},
+{
+content: '<div>남서울미술관</div>',
+latlng: new kakao.maps.LatLng(37.476046,126.979465)
+},
+{
+content: '<div>종로구립 박노수미술관</div>',
+latlng: new kakao.maps.LatLng(37.5813192,126.9668035)
+},
+{
+content: '<div>서울대학교 미술관</div>',
+latlng: new kakao.maps.LatLng(37.46803806,126.9592943)
+},
+{
+content: '<div>금호미술관</div>',
+latlng: new kakao.maps.LatLng(37.577462,126.9799022)
+}
+];
+
+for (var i = 0; i < positions.length; i ++) {
+    // 마커를 생성합니다
+    var marker = new kakao.maps.Marker({
+        map: map, // 마커를 표시할 지도
+        position: positions[i].latlng // 마커의 위치
+    });
+
+    // 마커에 표시할 인포윈도우를 생성합니다 
+    var infowindow = new kakao.maps.InfoWindow({
+        content: positions[i].content // 인포윈도우에 표시할 내용
+    });
+
+    // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
+    // 이벤트 리스너로는 클로저를 만들어 등록합니다 
+    // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
+    kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+    kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+}
+
+// 인포윈도우를 표시하는 클로저를 만드는 함수입니다 
+function makeOverListener(map, marker, infowindow) {
+    return function() {
+        infowindow.open(map, marker);
+    };
+}
+
+// 인포윈도우를 닫는 클로저를 만드는 함수입니다 
+function makeOutListener(infowindow) {
+    return function() {
+        infowindow.close();
+    };
+}
+
+/* 아래와 같이도 할 수 있습니다 */
+/*
+for (var i = 0; i < positions.length; i ++) {
+    // 마커를 생성합니다
+    var marker = new kakao.maps.Marker({
+        map: map, // 마커를 표시할 지도
+        position: positions[i].latlng // 마커의 위치
+    });
+
+    // 마커에 표시할 인포윈도우를 생성합니다 
+    var infowindow = new kakao.maps.InfoWindow({
+        content: positions[i].content // 인포윈도우에 표시할 내용
+    });
+
+    // 마커에 이벤트를 등록하는 함수 만들고 즉시 호출하여 클로저를 만듭니다
+    // 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
+    (function(marker, infowindow) {
+        // 마커에 mouseover 이벤트를 등록하고 마우스 오버 시 인포윈도우를 표시합니다 
+        kakao.maps.event.addListener(marker, 'mouseover', function() {
+            infowindow.open(map, marker);
+        });
+
+        // 마커에 mouseout 이벤트를 등록하고 마우스 아웃 시 인포윈도우를 닫습니다
+        kakao.maps.event.addListener(marker, 'mouseout', function() {
+            infowindow.close();
+        });
+    })(marker, infowindow);
+}
+*/
+</script>
+</body>
+</html>
